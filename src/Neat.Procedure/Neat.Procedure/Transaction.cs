@@ -33,7 +33,6 @@ namespace Neat.Procedure
             _transaction = Connection.Instance.BeginTransaction();
         }
 
-
         public static void Commit()
         {
             if (_transaction != null)
