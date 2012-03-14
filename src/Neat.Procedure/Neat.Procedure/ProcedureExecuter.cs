@@ -25,6 +25,21 @@ namespace Neat.Procedure
             return ret;
         }
 
+        public static int ExecuteNonQuery(string storeProcedureName, Dictionary<string, object> parameters)
+        {
+            int count;
+            var justopened = Connection.EnsureIsOpened();
+
+            using (var cmd = CurrentContext.Connection.CreateCommand())
+            {
+                PrepareCommand(storeProcedureName, parameters, Transaction.Instance, cmd);
+                count = cmd.ExecuteNonQuery();
+            }
+            if (justopened && Transaction.IsNull())
+                Connection.Close();
+            return count;
+        }
+
         public static IEnumerable<T> ExecuteReader<T>(string storeProcedureName, Dictionary<string, object> parameters) where T : new()
         {
             IList<T> list = new List<T>();
