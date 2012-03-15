@@ -10,14 +10,18 @@ namespace Neat.Procedure
 {
     public class ProcedureExecuter
     {
-        public static object ExecuteScalar(string storeProcedureName, Dictionary<string, object> parameters)
+        public static object ExecuteScalar(string storedProcedureName)
+        {
+            return ExecuteScalar(storedProcedureName, null);
+        }
+        public static object ExecuteScalar(string storedProcedureName, Dictionary<string, object> parameters)
         {
             object ret;
             var justopened = Connection.EnsureIsOpened();
 
             using (var cmd = CurrentContext.Connection.CreateCommand())
             {
-                PrepareCommand(storeProcedureName, parameters, Transaction.Instance, cmd);
+                PrepareCommand(storedProcedureName, parameters, Transaction.Instance, cmd);
                 ret = cmd.ExecuteScalar();
             }
             if (justopened && Transaction.IsNull())
@@ -25,14 +29,18 @@ namespace Neat.Procedure
             return ret;
         }
 
-        public static int ExecuteNonQuery(string storeProcedureName, Dictionary<string, object> parameters)
+        public static int ExecuteNonQuery(string storedProcedure)
+        {
+            return ExecuteNonQuery(storedProcedure, null);
+        }
+        public static int ExecuteNonQuery(string storedProcedureName, Dictionary<string, object> parameters)
         {
             int count;
             var justopened = Connection.EnsureIsOpened();
 
             using (var cmd = CurrentContext.Connection.CreateCommand())
             {
-                PrepareCommand(storeProcedureName, parameters, Transaction.Instance, cmd);
+                PrepareCommand(storedProcedureName, parameters, Transaction.Instance, cmd);
                 count = cmd.ExecuteNonQuery();
             }
             if (justopened && Transaction.IsNull())
@@ -40,14 +48,18 @@ namespace Neat.Procedure
             return count;
         }
 
-        public static IEnumerable<T> ExecuteReader<T>(string storeProcedureName, Dictionary<string, object> parameters) where T : new()
+        public static IEnumerable<T> ExecuteReader<T>(string storedProcedureName) where T : new()
+        {
+            return ExecuteReader<T>(storedProcedureName, null);
+        }
+        public static IEnumerable<T> ExecuteReader<T>(string storedProcedureName, Dictionary<string, object> parameters) where T : new()
         {
             IList<T> list = new List<T>();
             var justopened = Connection.EnsureIsOpened();
             var modelType = typeof(T);
             using (var cmd = CurrentContext.Connection.CreateCommand())
             {
-                PrepareCommand(storeProcedureName, parameters, Transaction.Instance, cmd);
+                PrepareCommand(storedProcedureName, parameters, Transaction.Instance, cmd);
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
