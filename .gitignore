@@ -36,3 +36,7 @@ Ankh.NoLoad
 pkg/
 /src/GlobalInfo.cs
 TestResult.xml
+
+#Vim files
+*.swp
+*~
