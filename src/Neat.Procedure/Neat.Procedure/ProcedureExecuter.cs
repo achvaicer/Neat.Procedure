@@ -12,7 +12,7 @@ namespace Neat.Procedure
     {
         public static object ExecuteScalar(string storedProcedureName)
         {
-            return ExecuteScalar(storedProcedureName, null);
+            return ExecuteScalar(storedProcedureName, new object[] {});
         }
         public static object ExecuteScalar(string storedProcedureName, Dictionary<string, object> parameters)
         {
@@ -21,7 +21,22 @@ namespace Neat.Procedure
 
             using (var cmd = CurrentContext.Connection.CreateCommand())
             {
-                PrepareCommand(storedProcedureName, parameters, Transaction.Instance, cmd);
+                Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
+                ret = cmd.ExecuteScalar();
+            }
+            if (justopened && Transaction.IsNull())
+                Connection.Close();
+            return ret;
+        }
+
+        public static object ExecuteScalar(string storedProcedureName, params object[] parameters)
+        {
+            object ret;
+            var justopened = Connection.EnsureIsOpened();
+
+            using (var cmd = CurrentContext.Connection.CreateCommand())
+            {
+                Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 ret = cmd.ExecuteScalar();
             }
             if (justopened && Transaction.IsNull())
@@ -31,7 +46,7 @@ namespace Neat.Procedure
 
         public static int ExecuteNonQuery(string storedProcedure)
         {
-            return ExecuteNonQuery(storedProcedure, null);
+            return ExecuteNonQuery(storedProcedure, new object[] {});
         }
         public static int ExecuteNonQuery(string storedProcedureName, Dictionary<string, object> parameters)
         {
@@ -40,7 +55,22 @@ namespace Neat.Procedure
 
             using (var cmd = CurrentContext.Connection.CreateCommand())
             {
-                PrepareCommand(storedProcedureName, parameters, Transaction.Instance, cmd);
+                Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
+                count = cmd.ExecuteNonQuery();
+            }
+            if (justopened && Transaction.IsNull())
+                Connection.Close();
+            return count;
+        }
+
+        public static int ExecuteNonQuery(string storedProcedureName, params object[] parameters)
+        {
+            int count;
+            var justopened = Connection.EnsureIsOpened();
+
+            using (var cmd = CurrentContext.Connection.CreateCommand())
+            {
+                Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 count = cmd.ExecuteNonQuery();
             }
             if (justopened && Transaction.IsNull())
@@ -50,7 +80,7 @@ namespace Neat.Procedure
 
         public static IEnumerable<T> ExecuteReader<T>(string storedProcedureName) where T : new()
         {
-            return ExecuteReader<T>(storedProcedureName, null);
+            return ExecuteReader<T>(storedProcedureName, new object[] {});
         }
         public static IEnumerable<T> ExecuteReader<T>(string storedProcedureName, Dictionary<string, object> parameters) where T : new()
         {
@@ -59,12 +89,12 @@ namespace Neat.Procedure
             var modelType = typeof(T);
             using (var cmd = CurrentContext.Connection.CreateCommand())
             {
-                PrepareCommand(storedProcedureName, parameters, Transaction.Instance, cmd);
+                Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        var item = ReaderToDomainObject<T>(modelType, reader);
+                        var item = ResultReader.ToDomainObject<T>(modelType, reader);
                         list.Add(item);
                     }
                 }
@@ -74,49 +104,28 @@ namespace Neat.Procedure
             return list;
         }
 
-        private static T ReaderToDomainObject<T>(Type modelType, SqlDataReader reader) where T : new()
+        public static IEnumerable<T> ExecuteReader<T>(string storedProcedureName, params object[] parameters) where T : new()
         {
-            var item = new T();
-            var properties = GetFieldNames(reader);
-
-            foreach (var prop in properties)
+            IList<T> list = new List<T>();
+            var justopened = Connection.EnsureIsOpened();
+            var modelType = typeof(T);
+            using (var cmd = CurrentContext.Connection.CreateCommand())
             {
-                SetPropertyValue<T>(modelType, reader, item, prop);
+                Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var item = ResultReader.ToDomainObject<T>(modelType, reader);
+                        list.Add(item);
+                    }
+                }
             }
-            return item;
+            if (justopened && Transaction.IsNull())
+                Connection.Close();
+            return list;
         }
 
-        private static void SetPropertyValue<T>(Type modelType, SqlDataReader reader, T item, string prop) where T : new()
-        {
-            var o = reader[prop];
-            var type = o.GetType();
-            if (type != typeof(DBNull))
-            {
-                var p = modelType.GetProperty(prop);
-                if (p != null)
-                    p.SetValue(item, o, null);
-            }
-        }
-
-        private static IEnumerable<string> GetFieldNames(IDataRecord dataRecord)
-        {
-            for (int i = 0; i < dataRecord.FieldCount; i++)
-                yield return dataRecord.GetName(i);
-        }
-
-        private static void PrepareCommand(string storeProcedureName, Dictionary<string, object> parameters, SqlTransaction trans, SqlCommand cmd)
-        {
-            cmd.Transaction = trans;
-            DictionaryToParameters(parameters, cmd);
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.CommandText = storeProcedureName;
-        }
-
-        private static void DictionaryToParameters(Dictionary<string, object> parameters, SqlCommand cmd)
-        {
-            if (parameters == null) return;
-            foreach (var parameter in parameters)
-                cmd.Parameters.AddWithValue(parameter.Key, parameter.Value);
-        }
+        
     }
 }
