@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data.SqlClient;
 
 namespace Neat.Procedure
@@ -11,15 +8,15 @@ namespace Neat.Procedure
         internal static T ToDomainObject<T>(Type modelType, SqlDataReader reader) where T : new()
         {
             var item = new T();
-            for (int i = 0; i < reader.FieldCount; i++)
-                SetPropertyValue<T>(modelType, reader.GetName(i), reader.GetValue(i), item);
+            for (var i = 0; i < reader.FieldCount; i++)
+                SetPropertyValue(modelType, reader.GetName(i), reader.GetValue(i), item);
 
             return item;
         }
 
         private static void SetPropertyValue<T>(Type modelType, string name, object value, T item) where T : new()
         {
-            if (value.GetType() == typeof(DBNull)) return;
+            if (value is DBNull) return;
 
             var p = modelType.GetProperty(name);
             if (p != null)
