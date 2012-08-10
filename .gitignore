@@ -40,3 +40,9 @@ TestResult.xml
 #Vim files
 *.swp
 *~
+
+#NCrunch
+*.ncrunchsolution
+
+#ReSharper
+_ReSharper*
