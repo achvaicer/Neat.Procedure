@@ -20,8 +20,7 @@ namespace Neat.Procedure
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 var r = new SqlParameter {ParameterName = "ReturnValue", Direction = ParameterDirection.ReturnValue};
                 cmd.Parameters.Add(r);
-                cmd.ExecuteScalar();
-                ret = r.Value;
+                ret = cmd.ExecuteScalar() ?? r.Value;
             }
             if (justopened && Transaction.IsNull())
                 Connection.Close();
@@ -38,8 +37,7 @@ namespace Neat.Procedure
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 var r = new SqlParameter { ParameterName = "ReturnValue", Direction = ParameterDirection.ReturnValue };
                 cmd.Parameters.Add(r);
-                cmd.ExecuteScalar();
-                ret = r.Value;
+                ret = cmd.ExecuteScalar() ?? r.Value;
             }
             if (justopened && Transaction.IsNull())
                 Connection.Close();
