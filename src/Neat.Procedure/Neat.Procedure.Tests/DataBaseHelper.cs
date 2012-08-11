@@ -25,11 +25,27 @@ namespace Neat.Procedure.Tests
 
         public static void CreateDataBase()
         {
+            TryDropDataBase();
+
             ExecuteScript(DBScripts.CreateDataBase, connectionStringMaster);
-            var procs = DBScripts.CreateAllProcedures.Split( 
-                new string[]{"GO"}, StringSplitOptions.RemoveEmptyEntries );
+            CreateStoredProcedures();
+        }
+
+        private static void CreateStoredProcedures()
+        {
+            var procs = DBScripts.CreateAllProcedures.Split(
+                new string[] { "GO" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var proc in procs)
                 ExecuteScript(proc, connectionStringDefault);
+        }
+
+        private static void TryDropDataBase()
+        {
+            try
+            {
+                DropDataBase();
+            }
+            catch { }
         }
 
         public static void DropDataBase()

@@ -153,7 +153,18 @@ AS
 BEGIN
 	SELECT CONVERT(BIT, 0)
 END
-GO</value>
+GO
+CREATE PROCEDURE [ExecuteScalarWithSelectMultipleColumnsAsInt]
+AS
+BEGIN
+	SELECT 42, 43, 44
+END
+GO
+CREATE PROCEDURE [ExecuteScalarWithSelectMultipleColumnsAsVarChar]
+AS
+BEGIN
+	SELECT 'The answer is 42', 'No, is 43', 'Is 44 for sure'
+END</value>
   </data>
   <data name="CreateDataBase" xml:space="preserve">
     <value>

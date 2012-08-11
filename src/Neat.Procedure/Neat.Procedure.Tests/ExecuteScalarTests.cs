@@ -47,5 +47,17 @@ namespace Neat.Procedure.Tests
         {
             ProcedureExecuter.ExecuteScalar("ExecuteScalarWithSelectAsDateTime").Should().Be(new DateTime(2012, 1, 1));
         }
+
+        [Test]
+        public void SelectWithMultipleColumnsAllAsInt()
+        {
+            ProcedureExecuter.ExecuteScalar("ExecuteScalarWithSelectMultipleColumnsAsInt").Should().Be(42);
+        }
+
+        [Test]
+        public void SelectWithMutlipleColumnsAllAsVarchar()
+        { 
+            ProcedureExecuter.ExecuteScalar("ExecuteScalarWithSelectMultipleColumnsAsVarChar").Should().Be("The answer is 42");
+        }
     }
 }
