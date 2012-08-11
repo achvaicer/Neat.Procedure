@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace Neat.Procedure
@@ -34,6 +31,7 @@ namespace Neat.Procedure
             if (parameters == null) return;
             foreach (var parameter in parameters)
                 cmd.Parameters.AddWithValue(parameter.Key, parameter.Value);
+            
         }
 
         private static void ArgumentsToParameters(SqlCommand cmd, params object[] parameters)

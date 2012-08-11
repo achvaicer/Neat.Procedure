@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.SqlClient;
-using System.Configuration;
+﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace Neat.Procedure
 {
@@ -19,10 +15,12 @@ namespace Neat.Procedure
             object ret;
             var justopened = Connection.EnsureIsOpened();
 
-            using (var cmd = CurrentContext.Connection.CreateCommand())
+            using (var cmd = Connection.Instance.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
-                ret = cmd.ExecuteScalar();
+                var r = new SqlParameter {ParameterName = "ReturnValue", Direction = ParameterDirection.ReturnValue};
+                cmd.Parameters.Add(r);
+                ret = cmd.ExecuteScalar() ?? r.Value;
             }
             if (justopened && Transaction.IsNull())
                 Connection.Close();
@@ -34,10 +32,12 @@ namespace Neat.Procedure
             object ret;
             var justopened = Connection.EnsureIsOpened();
 
-            using (var cmd = CurrentContext.Connection.CreateCommand())
+            using (var cmd = Connection.Instance.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
-                ret = cmd.ExecuteScalar();
+                var r = new SqlParameter { ParameterName = "ReturnValue", Direction = ParameterDirection.ReturnValue };
+                cmd.Parameters.Add(r);
+                ret = cmd.ExecuteScalar() ?? r.Value;
             }
             if (justopened && Transaction.IsNull())
                 Connection.Close();
@@ -53,7 +53,7 @@ namespace Neat.Procedure
             int count;
             var justopened = Connection.EnsureIsOpened();
 
-            using (var cmd = CurrentContext.Connection.CreateCommand())
+            using (var cmd = Connection.Instance.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 count = cmd.ExecuteNonQuery();
@@ -68,7 +68,7 @@ namespace Neat.Procedure
             int count;
             var justopened = Connection.EnsureIsOpened();
 
-            using (var cmd = CurrentContext.Connection.CreateCommand())
+            using (var cmd = Connection.Instance.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 count = cmd.ExecuteNonQuery();
@@ -87,7 +87,7 @@ namespace Neat.Procedure
             IList<T> list = new List<T>();
             var justopened = Connection.EnsureIsOpened();
             var modelType = typeof(T);
-            using (var cmd = CurrentContext.Connection.CreateCommand())
+            using (var cmd = Connection.Instance.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -109,7 +109,7 @@ namespace Neat.Procedure
             IList<T> list = new List<T>();
             var justopened = Connection.EnsureIsOpened();
             var modelType = typeof(T);
-            using (var cmd = CurrentContext.Connection.CreateCommand())
+            using (var cmd = Connection.Instance.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 using (SqlDataReader reader = cmd.ExecuteReader())
