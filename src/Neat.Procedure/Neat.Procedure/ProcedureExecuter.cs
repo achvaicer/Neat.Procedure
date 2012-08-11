@@ -15,7 +15,7 @@ namespace Neat.Procedure
             object ret;
             var justopened = Connection.EnsureIsOpened();
 
-            using (var cmd = Connection.Instance.CreateCommand())
+            using (var cmd = CurrentContext.Connection.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 var r = new SqlParameter {ParameterName = "ReturnValue", Direction = ParameterDirection.ReturnValue};
@@ -32,7 +32,7 @@ namespace Neat.Procedure
             object ret;
             var justopened = Connection.EnsureIsOpened();
 
-            using (var cmd = Connection.Instance.CreateCommand())
+            using (var cmd = CurrentContext.Connection.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 var r = new SqlParameter { ParameterName = "ReturnValue", Direction = ParameterDirection.ReturnValue };
@@ -53,7 +53,7 @@ namespace Neat.Procedure
             int count;
             var justopened = Connection.EnsureIsOpened();
 
-            using (var cmd = Connection.Instance.CreateCommand())
+            using (var cmd = CurrentContext.Connection.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 count = cmd.ExecuteNonQuery();
@@ -68,7 +68,7 @@ namespace Neat.Procedure
             int count;
             var justopened = Connection.EnsureIsOpened();
 
-            using (var cmd = Connection.Instance.CreateCommand())
+            using (var cmd = CurrentContext.Connection.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 count = cmd.ExecuteNonQuery();
@@ -87,7 +87,7 @@ namespace Neat.Procedure
             IList<T> list = new List<T>();
             var justopened = Connection.EnsureIsOpened();
             var modelType = typeof(T);
-            using (var cmd = Connection.Instance.CreateCommand())
+            using (var cmd = CurrentContext.Connection.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -109,7 +109,7 @@ namespace Neat.Procedure
             IList<T> list = new List<T>();
             var justopened = Connection.EnsureIsOpened();
             var modelType = typeof(T);
-            using (var cmd = Connection.Instance.CreateCommand())
+            using (var cmd = CurrentContext.Connection.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
                 using (SqlDataReader reader = cmd.ExecuteReader())
