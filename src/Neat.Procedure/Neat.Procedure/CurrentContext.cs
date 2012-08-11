@@ -12,9 +12,7 @@ namespace Neat.Procedure
         {
             get
             {
-                return Transaction.Instance != null && Transaction.Instance.Connection != null ?
-                    Transaction.Instance.Connection : Connection;
-
+                return Transaction.IsNull() ? Neat.Procedure.Connection.Instance : Transaction.Instance.Connection;
             }
         }
     }
