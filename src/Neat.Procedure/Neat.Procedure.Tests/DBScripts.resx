@@ -164,6 +164,14 @@ CREATE PROCEDURE [ExecuteScalarWithSelectMultipleColumnsAsVarChar]
 AS
 BEGIN
 	SELECT 'The answer is 42', 'No, is 43', 'Is 44 for sure'
+END
+GO
+CREATE PROCEDURE [ExecuteReaderWithMultipleLinesExactProperties]
+AS
+BEGIN
+	SELECT 'John Doe' as Name, CONVERT(DATETIME, '1990-01-01') AS BirthDate, 98.7 AS Weight, CONVERT(BIT, '1')  AS IsMale, 210 AS IQ
+	UNION
+	SELECT 'Mario Bros' as Name, CONVERT(DATETIME, '1990-02-02') AS BirthDate, 94.7 AS Weight,  CONVERT(BIT, '1') AS IsMale, 220 AS IQ
 END</value>
   </data>
   <data name="CreateDataBase" xml:space="preserve">

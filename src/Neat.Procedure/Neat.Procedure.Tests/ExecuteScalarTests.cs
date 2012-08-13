@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using SharpTestsEx;
 
 namespace Neat.Procedure.Tests
 {
-    class ExecuteScalarTests : ExecuteTests
+    class ExecuteScalarTests
     {
         
 

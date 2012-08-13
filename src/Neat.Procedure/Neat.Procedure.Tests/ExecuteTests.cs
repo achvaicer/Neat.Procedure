@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using SharpTestsEx;
+﻿using NUnit.Framework;
 
 namespace Neat.Procedure.Tests
 {
-    [TestFixture]
-    public abstract class ExecuteTests
+    [SetUpFixture]
+    public class ExecuteTests
     {
-        [TestFixtureSetUp]
+        [SetUp]
         public void CreateDataBase()
         {
             DataBaseHelper.CreateDataBase();
         }
 
-        [TestFixtureTearDown]
+        [TearDown]
         public void DropDataBase()
         {
             DataBaseHelper.DropDataBase();
