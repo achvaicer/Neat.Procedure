@@ -1,28 +1,29 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace Neat.Procedure
 {
     internal class Command
     {
+        internal static SqlParameter AddReturnValueAsParameter(SqlCommand cmd)
+        {
+            var r = new SqlParameter { ParameterName = "ReturnValue", Direction = ParameterDirection.ReturnValue };
+            cmd.Parameters.Add(r);
+            return r;
+        }
+
         internal static void Prepare(SqlCommand cmd, SqlTransaction trans, string storeProcedureName, Dictionary<string, object> parameters)
         {
             DictionaryToParameters(cmd, parameters);
             Prepare(cmd, trans, storeProcedureName);
         }
 
-        private static void Prepare(SqlCommand cmd, SqlTransaction trans, string storeProcedureName)
-        {
-            cmd.Transaction = trans;
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.CommandText = storeProcedureName;
-        }
-
         internal static void Prepare(SqlCommand cmd, SqlTransaction trans, string storeProcedureName, params object[] parameters)
         {
             ArgumentsToParameters(cmd, parameters);
             cmd.Transaction = trans;
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = storeProcedureName;
         }
 

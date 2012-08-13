@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data.SqlClient;
 using System.Configuration;
 
@@ -9,15 +6,15 @@ namespace Neat.Procedure.Tests
 {
     class DataBaseHelper
     {
-        private static string connectionStringMaster = ConfigurationManager.ConnectionStrings["Neat.Procedure.Settings.ConnectionString.Master"].ConnectionString;
-        private static string connectionStringDefault = ConfigurationManager.ConnectionStrings["Neat.Procedure.Settings.ConnectionString.Default"].ConnectionString;
+        private static readonly string ConnectionStringMaster = ConfigurationManager.ConnectionStrings["Neat.Procedure.Settings.ConnectionString.Master"].ConnectionString;
+        private static readonly string ConnectionStringDefault = ConfigurationManager.ConnectionStrings["Neat.Procedure.Settings.ConnectionString.Default"].ConnectionString;
 
         public static void ExecuteScript(string script, string connectionString)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand(script, conn))
+                using (var cmd = new SqlCommand(script, conn))
                     cmd.ExecuteNonQuery();
                 conn.Close();
             }
@@ -27,16 +24,16 @@ namespace Neat.Procedure.Tests
         {
             TryDropDataBase();
 
-            ExecuteScript(DBScripts.CreateDataBase, connectionStringMaster);
+            ExecuteScript(DBScripts.CreateDataBase, ConnectionStringMaster);
             CreateStoredProcedures();
         }
 
         private static void CreateStoredProcedures()
         {
             var procs = DBScripts.CreateAllProcedures.Split(
-                new string[] { "GO" }, StringSplitOptions.RemoveEmptyEntries);
+                new[] { "GO" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var proc in procs)
-                ExecuteScript(proc, connectionStringDefault);
+                ExecuteScript(proc, ConnectionStringDefault);
         }
 
         private static void TryDropDataBase()
@@ -45,12 +42,13 @@ namespace Neat.Procedure.Tests
             {
                 DropDataBase();
             }
-            catch { }
+            catch
+            { }
         }
 
         public static void DropDataBase()
         {
-            ExecuteScript(DBScripts.DropDataBase, connectionStringMaster);
+            ExecuteScript(DBScripts.DropDataBase, ConnectionStringMaster);
         }
     }
 }

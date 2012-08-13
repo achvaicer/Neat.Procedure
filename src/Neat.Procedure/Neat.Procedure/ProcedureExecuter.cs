@@ -18,14 +18,15 @@ namespace Neat.Procedure
             using (var cmd = CurrentContext.Connection.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
-                var r = new SqlParameter {ParameterName = "ReturnValue", Direction = ParameterDirection.ReturnValue};
-                cmd.Parameters.Add(r);
+                var r = Command.AddReturnValueAsParameter(cmd);
                 ret = cmd.ExecuteScalar() ?? r.Value;
             }
             if (justopened && Transaction.IsNull())
                 Connection.Close();
             return ret;
         }
+
+        
 
         public static object ExecuteScalar(string storedProcedureName, params object[] parameters)
         {
@@ -35,8 +36,7 @@ namespace Neat.Procedure
             using (var cmd = CurrentContext.Connection.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
-                var r = new SqlParameter { ParameterName = "ReturnValue", Direction = ParameterDirection.ReturnValue };
-                cmd.Parameters.Add(r);
+                var r = Command.AddReturnValueAsParameter(cmd);
                 ret = cmd.ExecuteScalar() ?? r.Value;
             }
             if (justopened && Transaction.IsNull())
