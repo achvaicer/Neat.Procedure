@@ -30,6 +30,37 @@ namespace Neat.Procedure.Tests
             var people = ProcedureExecuter.ExecuteReader<Person>("ExecuteReaderWithMultipleLinesExactProperties");
             people.First().Should().Be.Equals(_john);
             people.Last().Should().Be.Equals(_mario);
+            people.Count().Should().Be(2);
+        }
+
+        [Test]
+        public void SelectMultipleLinesWithMoreProperties()
+        {
+            var people = ProcedureExecuter.ExecuteReader<Person>("ExecuteReaderWithMultipleLinesMoreProperties");
+            people.First().Should().Be.Equals(_john);
+            people.Last().Should().Be.Equals(_mario);
+        }
+
+        [Test]
+        public void SelectMultipleLinesWithLessProperties()
+        {
+            var people = ProcedureExecuter.ExecuteReader<Person>("ExecuteReaderWithMultipleLinesLessProperties");
+            var j = people.First();
+            var m = people.Last();
+
+            j.Name.Should().Be(_john.Name);
+            j.BirthDate.Should().Be(_john.BirthDate);
+            m.Name.Should().Be(_mario.Name);
+            m.BirthDate.Should().Be(_mario.BirthDate);
+
+            j.Weight.Should().Be(default(Decimal));
+            m.Weight.Should().Be(default(Decimal));
+        }
+
+        [Test]
+        public void SelectNoLinesWithExactProperties()
+        {
+            ProcedureExecuter.ExecuteReader<Person>("ExecuteReaderWithNoLinesExactProperties").Any().Should().Be(false);
         }
     }
 

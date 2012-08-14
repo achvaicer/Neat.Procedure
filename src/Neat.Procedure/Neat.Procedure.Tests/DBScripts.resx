@@ -172,6 +172,29 @@ BEGIN
 	SELECT 'John Doe' as Name, CONVERT(DATETIME, '1990-01-01') AS BirthDate, 98.7 AS Weight, CONVERT(BIT, '1')  AS IsMale, 210 AS IQ
 	UNION
 	SELECT 'Mario Bros' as Name, CONVERT(DATETIME, '1990-02-02') AS BirthDate, 94.7 AS Weight,  CONVERT(BIT, '1') AS IsMale, 220 AS IQ
+END
+GO
+CREATE PROCEDURE [ExecuteReaderWithMultipleLinesMoreProperties]
+AS
+BEGIN
+	SELECT 'John Doe' as Name, CONVERT(DATETIME, '1990-01-01') AS BirthDate, 98.7 AS Weight, CONVERT(BIT, '1')  AS IsMale, 210 AS IQ, 23 as Age
+	UNION
+	SELECT 'Mario Bros' as Name, CONVERT(DATETIME, '1990-02-02') AS BirthDate, 94.7 AS Weight,  CONVERT(BIT, '1') AS IsMale, 220 AS IQ, 25 as Age
+END
+GO
+CREATE PROCEDURE [ExecuteReaderWithMultipleLinesLessProperties]
+AS
+BEGIN
+	SELECT 'John Doe' as Name, CONVERT(DATETIME, '1990-01-01') AS BirthDate
+	UNION
+	SELECT 'Mario Bros' as Name, CONVERT(DATETIME, '1990-02-02') AS BirthDate
+END
+GO
+CREATE PROCEDURE [ExecuteReaderWithNoLinesExactProperties]
+AS
+BEGIN
+	SELECT 'John Doe' as Name, CONVERT(DATETIME, '1990-01-01') AS BirthDate, 98.7 AS Weight, CONVERT(BIT, '1')  AS IsMale, 210 AS IQ
+	WHERE 1 = 0
 END</value>
   </data>
   <data name="CreateDataBase" xml:space="preserve">
