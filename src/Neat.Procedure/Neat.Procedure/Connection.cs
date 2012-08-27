@@ -3,7 +3,7 @@ using System.Configuration;
 
 namespace Neat.Procedure
 {
-    internal static class Connection
+    public static class Connection
     {
         private const string DefaultConnectionStringName = "Neat.Procedure.Settings.ConnectionString.Default";
         private static string _connectionStringName;
