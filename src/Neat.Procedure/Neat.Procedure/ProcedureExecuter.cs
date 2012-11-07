@@ -1,11 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 
 namespace Neat.Procedure
 {
     public class ProcedureExecuter
     {
+        public static int? CommandTimeout
+        {
+            get { return Command.CommandTimeout; }
+            set { Command.CommandTimeout = value; }
+        }
+
         public static object ExecuteScalar(string storedProcedureName)
         {
             return ExecuteScalar(storedProcedureName, new object[] {});

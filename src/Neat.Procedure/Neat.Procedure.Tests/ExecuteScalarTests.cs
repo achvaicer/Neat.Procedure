@@ -53,7 +53,8 @@ namespace Neat.Procedure.Tests
 
         [Test]
         public void SelectWithMutlipleColumnsAllAsVarchar()
-        { 
+        {
+            ProcedureExecuter.CommandTimeout = 90;
             ProcedureExecuter.ExecuteScalar("ExecuteScalarWithSelectMultipleColumnsAsVarChar").Should().Be("The answer is 42");
         }
     }

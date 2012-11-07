@@ -6,6 +6,8 @@ namespace Neat.Procedure
 {
     internal class Command
     {
+        internal static int? CommandTimeout { get; set; }
+
         internal static SqlParameter AddReturnValueAsParameter(SqlCommand cmd)
         {
             var r = new SqlParameter { ParameterName = "ReturnValue", Direction = ParameterDirection.ReturnValue };
@@ -25,6 +27,7 @@ namespace Neat.Procedure
             cmd.Transaction = trans;
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = storeProcedureName;
+            cmd.CommandTimeout = CommandTimeout ?? 30;
         }
 
         private static void DictionaryToParameters(SqlCommand cmd, Dictionary<string, object> parameters)
