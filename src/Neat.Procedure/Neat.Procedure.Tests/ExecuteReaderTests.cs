@@ -62,6 +62,16 @@ namespace Neat.Procedure.Tests
         {
             ProcedureExecuter.ExecuteReader<Person>("ExecuteReaderWithNoLinesExactProperties").Any().Should().Be(false);
         }
+
+        [Test]
+        public void ExecuteTwice()
+        {
+            var p1 = ProcedureExecuter.ExecuteReader<Person>("ExecuteReaderWithMultipleLinesMoreProperties");
+            var p2 = ProcedureExecuter.ExecuteReader<Person>("ExecuteReaderWithMultipleLinesLessProperties");
+
+            p1.Count().Should().Be(2);
+            p2.Count().Should().Be(2);
+        }
     }
 
     class Person

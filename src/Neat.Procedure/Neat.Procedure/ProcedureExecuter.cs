@@ -5,6 +5,8 @@ namespace Neat.Procedure
 {
     public class ProcedureExecuter
     {
+        private static object _lock = new object();
+
         public static int? CommandTimeout
         {
             get { return Command.CommandTimeout; }
@@ -95,12 +97,15 @@ namespace Neat.Procedure
             using (var cmd = CurrentContext.Connection.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                lock (_lock)
                 {
-                    while (reader.Read())
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        var item = ResultReader.ToDomainObject<T>(modelType, reader);
-                        list.Add(item);
+                        while (reader.Read())
+                        {
+                            var item = ResultReader.ToDomainObject<T>(modelType, reader);
+                            list.Add(item);
+                        }
                     }
                 }
             }
@@ -117,12 +122,15 @@ namespace Neat.Procedure
             using (var cmd = CurrentContext.Connection.CreateCommand())
             {
                 Command.Prepare(cmd, Transaction.Instance, storedProcedureName, parameters);
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                lock (_lock)
                 {
-                    while (reader.Read())
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        var item = ResultReader.ToDomainObject<T>(modelType, reader);
-                        list.Add(item);
+                        while (reader.Read())
+                        {
+                            var item = ResultReader.ToDomainObject<T>(modelType, reader);
+                            list.Add(item);
+                        }
                     }
                 }
             }
