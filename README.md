@@ -41,3 +41,13 @@ or
 		{ "arg4", DateTime.Now }
 	};
 	ProcedureExecuter.ExecuteNonQuery("YourSPName", parameters);
+
+By default, connectionStringName is Neat.Procedure.Settings.ConnectionString.Default
+
+But can be changed by
+	
+	Connection.ConnectionStringName("YourConnectionStringNameHere");
+
+or 
+
+	Connection.ConnectionString("server=(local)\SQLEXPRESS;database=DBName;Integrated Security=SSPI");
