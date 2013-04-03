@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using SharpTestsEx;
 
@@ -7,6 +8,12 @@ namespace Neat.Procedure.Tests
     class ExecuteScalarTests
     {
         
+        [Test]
+        public void ReturnMultipleValuesInParallel()
+        {
+            Parallel.For(0, 10, x => ProcedureExecuter.ExecuteScalar("ExecuteScalarWithReturnValueAsInt").Should().Be(42));
+        }
+
 
         [Test]
         public void ReturnValueAsInt()

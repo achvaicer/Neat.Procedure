@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using SharpTestsEx;
 
@@ -72,13 +73,24 @@ namespace Neat.Procedure.Tests
             p1.Count().Should().Be(2);
             p2.Count().Should().Be(2);
         }
+
+        [Test]
+        public void ExecuteParallel()
+        {
+            Parallel.For(0, 10, x =>
+            {
+                var p = ProcedureExecuter.ExecuteReader<Person>("ExecuteReaderWithMultipleLinesMoreProperties");
+                p.Count().Should().Be(2);
+            });
+        }
+
     }
 
     class Person
     {
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
-        public decimal  Weight { get; set; }
+        public decimal Weight { get; set; }
         public bool IsMale { get; set; }
         public int IQ { get; set; }
     }
