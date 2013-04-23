@@ -18,9 +18,21 @@ namespace Neat.Procedure
         {
             if (value is DBNull) return;
 
-            var p = modelType.GetProperty(name);
+            var normalizedPropertyName = NormalizePropertyName(name);
+            var p = modelType.GetProperty(normalizedPropertyName);
             if (p != null)
                 p.SetValue(item, value, null);
+        }
+
+        private static String NormalizePropertyName(string name)
+        {
+            return
+                name.Trim()
+                    .Replace(" ", "_")
+                    .Replace("-", "_")
+                    .Replace("(", "_")
+                    .Replace(")", "_")
+                    .Replace("/", "_");
         }
     }
 }
