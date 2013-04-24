@@ -84,6 +84,12 @@ namespace Neat.Procedure.Tests
             });
         }
 
+        [Test]
+        public void InvalidCharsAtPropertyShouldBeChangedToUnderscore()
+        {
+            ResultReader.NormalizePropertyName("1a-b c(d)e*f").Should().Be("_a_b_c_d_e_f");
+        }
+
     }
 
     class Person

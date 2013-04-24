@@ -24,15 +24,19 @@ namespace Neat.Procedure
                 p.SetValue(item, value, null);
         }
 
-        private static String NormalizePropertyName(string name)
+        internal static String NormalizePropertyName(string name)
         {
-            return
-                name.Trim()
-                    .Replace(" ", "_")
-                    .Replace("-", "_")
-                    .Replace("(", "_")
-                    .Replace(")", "_")
-                    .Replace("/", "_");
+            var chars = name.ToCharArray();
+            var len = name.Length;
+
+            for (int i = 0; i < len; i++)
+            {
+                var c = chars[i];
+                if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_' || (c >= '0' && c <= '9' && i > 0)))
+                    chars[i] = '_';
+            }
+
+            return new string(chars);
         }
     }
 }
