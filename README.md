@@ -51,3 +51,7 @@ But can be changed by
 or 
 
 	Connection.ConnectionString("server=(local)\SQLEXPRESS;database=DBName;Integrated Security=SSPI");
+
+You can install it via NuGet
+
+	Install-Package Neat.Procedure
