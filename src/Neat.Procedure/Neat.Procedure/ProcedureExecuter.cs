@@ -17,7 +17,7 @@ namespace Neat.Procedure
         {
             return ExecuteScalar(storedProcedureName, new object[] {});
         }
-        public static object ExecuteScalar(string storedProcedureName, Dictionary<string, object> parameters)
+        public static object ExecuteScalar(string storedProcedureName, IDictionary<string, object> parameters)
         {
             object ret;
             lock (_lock)
@@ -61,7 +61,7 @@ namespace Neat.Procedure
         {
             return ExecuteNonQuery(storedProcedure, new object[] {});
         }
-        public static int ExecuteNonQuery(string storedProcedureName, Dictionary<string, object> parameters)
+        public static int ExecuteNonQuery(string storedProcedureName, IDictionary<string, object> parameters)
         {
             int count;
             lock (_lock)
@@ -101,7 +101,7 @@ namespace Neat.Procedure
         {
             return ExecuteReader<T>(storedProcedureName, new object[] {});
         }
-        public static IEnumerable<T> ExecuteReader<T>(string storedProcedureName, Dictionary<string, object> parameters) where T : new()
+        public static IEnumerable<T> ExecuteReader<T>(string storedProcedureName, IDictionary<string, object> parameters) where T : new()
         {
             IList<T> list = new List<T>();
             lock (_lock)

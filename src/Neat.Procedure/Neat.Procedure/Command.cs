@@ -18,7 +18,7 @@ namespace Neat.Procedure
             return r;
         }
 
-        internal static void Prepare(SqlCommand cmd, SqlTransaction trans, string storeProcedureName, Dictionary<string, object> parameters)
+        internal static void Prepare(SqlCommand cmd, SqlTransaction trans, string storeProcedureName, IDictionary<string, object> parameters)
         {
             DictionaryToParameters(cmd, parameters);
             Prepare(cmd, trans, storeProcedureName);
@@ -33,7 +33,7 @@ namespace Neat.Procedure
             ArgumentsToParameters(cmd, parameters);
         }
 
-        private static void DictionaryToParameters(SqlCommand cmd, Dictionary<string, object> parameters)
+        private static void DictionaryToParameters(SqlCommand cmd, IDictionary<string, object> parameters)
         {
             if (parameters == null) return;
             foreach (var parameter in parameters)
@@ -44,18 +44,13 @@ namespace Neat.Procedure
         private static void ArgumentsToParameters(SqlCommand cmd, params object[] parameters)
         {
             if (parameters == null || parameters.Length == 0) return;
-            using (var connection = new SqlConnection(cmd.Connection.ConnectionString))
+            using (var command = new SqlCommand(ParametersQuery, cmd.Connection))
             {
-                connection.Open();
-                using (var command = new SqlCommand(ParametersQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@SpecificName", cmd.CommandText);
-                    var reader = command.ExecuteReader();
-                    var i = 0;
-                    while (reader.Read() && i < parameters.Length)
-                        cmd.Parameters.AddWithValue(reader[ParameterNameColumn] as string, parameters[i++]);
-                }
-                connection.Close();
+                command.Parameters.AddWithValue("@SpecificName", cmd.CommandText);
+                var reader = command.ExecuteReader();
+                var i = 0;
+                while (reader.Read() && i < parameters.Length)
+                    cmd.Parameters.AddWithValue(reader[ParameterNameColumn] as string, parameters[i++]);
             }
         }
     }

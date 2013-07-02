@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace Neat.Procedure
 {
@@ -9,8 +8,8 @@ namespace Neat.Procedure
         internal static T ToDomainObject<T>(Type modelType, SqlDataReader reader) where T : new()
         {
             var item = new T();
-            var count = reader.FieldCount;
-            Parallel.For(0, count, i => SetPropertyValue(modelType, reader.GetName(i), reader.GetValue(i), item));
+            for (var i = 0; i < reader.FieldCount; i++)
+                SetPropertyValue(modelType, reader.GetName(i), reader.GetValue(i), item);
             return item;
         }
 
