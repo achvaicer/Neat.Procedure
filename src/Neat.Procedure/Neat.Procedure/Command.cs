@@ -47,10 +47,12 @@ namespace Neat.Procedure
             using (var command = new SqlCommand(ParametersQuery, cmd.Connection))
             {
                 command.Parameters.AddWithValue("@SpecificName", cmd.CommandText);
-                var reader = command.ExecuteReader();
-                var i = 0;
-                while (reader.Read() && i < parameters.Length)
-                    cmd.Parameters.AddWithValue(reader[ParameterNameColumn] as string, parameters[i++]);
+                using (var reader = command.ExecuteReader())
+                {
+                    var i = 0;
+                    while (reader.Read() && i < parameters.Length)
+                        cmd.Parameters.AddWithValue(reader[ParameterNameColumn] as string, parameters[i++]);
+                }
             }
         }
     }
