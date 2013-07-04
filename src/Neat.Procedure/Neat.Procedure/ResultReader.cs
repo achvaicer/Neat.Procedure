@@ -20,7 +20,7 @@ namespace Neat.Procedure
             var normalizedPropertyName = NormalizePropertyName(name);
             var p = modelType.GetProperty(normalizedPropertyName);
             if (p != null)
-                p.SetValue(item, value, null);
+                p.SetValue(item, value is IConvertible ? Convert.ChangeType(value, p.PropertyType) : value, null);
         }
 
         internal static String NormalizePropertyName(string name)

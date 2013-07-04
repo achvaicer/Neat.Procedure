@@ -195,6 +195,18 @@ AS
 BEGIN
 	SELECT 'John Doe' as Name, CONVERT(DATETIME, '1990-01-01') AS BirthDate, 98.7 AS Weight, CONVERT(BIT, '1')  AS IsMale, 210 AS IQ
 	WHERE 1 = 0
+END
+GO
+CREATE PROCEDURE [ExecuteReaderWithIntegerAsFalseBoolean]
+AS
+BEGIN
+	SELECT 'John Doe' as Name, CONVERT(DATETIME, '1990-01-01') AS BirthDate, 98.7 AS Weight, CONVERT(BIT, '1')  AS IsMale, 0 AS IQ
+END
+GO
+CREATE PROCEDURE [ExecuteReaderWithIntegerAsTrueBoolean]
+AS
+BEGIN
+	SELECT 'John Doe' as Name, CONVERT(DATETIME, '1990-01-01') AS BirthDate, 98.7 AS Weight, CONVERT(BIT, '1')  AS IsMale, 1 AS IQ
 END</value>
   </data>
   <data name="CreateDataBase" xml:space="preserve">
