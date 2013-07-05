@@ -90,26 +90,11 @@ namespace Neat.Procedure.Tests
             ResultReader.NormalizePropertyName("1a-b c(d)e*f").Should().Be("_a_b_c_d_e_f");
         }
         
-        [Test]
-        public void IntegerAsFalseBoolean()
-        {
-            var x = ProcedureExecuter.ExecuteReader<Int32AsBoolean>("ExecuteReaderWithIntegerAsFalseBoolean").First();
-            x.IQ.Should().Be(false);
-        }
-
-        [Test]
-        public void IntegerAsTrueBoolean()
-        {
-            var x = ProcedureExecuter.ExecuteReader<Int32AsBoolean>("ExecuteReaderWithIntegerAsTrueBoolean").First();
-            x.IQ.Should().Be(true);
-        }
+       
 
     }
 
-    class Int32AsBoolean
-    {
-        public bool IQ { get; set; } 
-    }
+    
 
     class Person
     {

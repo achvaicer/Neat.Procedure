@@ -19,8 +19,12 @@ namespace Neat.Procedure
 
             var normalizedPropertyName = NormalizePropertyName(name);
             var p = modelType.GetProperty(normalizedPropertyName);
-            if (p != null)
-                p.SetValue(item, value is IConvertible ? Convert.ChangeType(value, p.PropertyType) : value, null);
+            if (p == null) return;
+
+            var t = (p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof (Nullable<>))
+                        ? p.PropertyType.GetGenericArguments()[0]
+                        : p.PropertyType;
+            p.SetValue(item, value is IConvertible ? Convert.ChangeType(value, t) : value, null);
         }
 
         internal static String NormalizePropertyName(string name)
@@ -28,7 +32,7 @@ namespace Neat.Procedure
             var chars = name.ToCharArray();
             var len = name.Length;
 
-            for (int i = 0; i < len; i++)
+            for (var i = 0; i < len; i++)
             {
                 var c = chars[i];
                 if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_' || (c >= '0' && c <= '9' && i > 0)))
