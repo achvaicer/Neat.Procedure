@@ -1,4 +1,7 @@
-#Neat.Procedure [![Build status](https://ci.appveyor.com/api/projects/status/u4rukh13r4pncrf5?svg=true)](https://ci.appveyor.com/project/achvaicer/neat-procedure)
+#Neat.Procedure 
+
+[![Build status](https://ci.appveyor.com/api/projects/status/u4rukh13r4pncrf5?svg=true)](https://ci.appveyor.com/project/achvaicer/neat-procedure)
+
 Do you think your life is harder only because you have to execute some stored procedures?
 
 So Neat.Procedure is for you.
